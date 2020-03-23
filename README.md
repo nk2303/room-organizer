@@ -1,24 +1,9 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Follow this instruction to "Set up postregesql" in local machine.
+https://www.digitalocean.com/community/tutorials/how-to-set-up-ruby-on-rails-with-postgres#setting-up-postgres
 
-Things you may want to cover:
+Then run `rake db:setup` to connect the app to database.
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Then follow "Running Rails" to run the server.
+https://www.digitalocean.com/community/tutorials/how-to-set-up-ruby-on-rails-with-postgres#running-rails
