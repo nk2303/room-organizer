@@ -1,6 +1,0 @@
-class RoomsController < ApplicationController
-
-
-
-
-end

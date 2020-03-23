@@ -1,5 +1,0 @@
-class StoragesController < ApplicationController
-
-
-
-end
