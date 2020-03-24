@@ -1,0 +1,2 @@
+class StroragesController < ApplicationController
+end
