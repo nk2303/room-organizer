@@ -1,9 +1,15 @@
 const endPoint = "http://localhost:3000/api/v1/users"
 
+const itemEndPoint = "http://localhost:3000/api/v1/items"
+
+const roomEndPoint = "http://localhost:3000/api/v1/rooms"
+
+const roomEndPoint = "http://localhost:3000/api/v1/storages"
+
 document.addEventListener('DOMContentLoaded', () => {
   const roomList = document.querySelector('#room-list');
   // TODO: @nk2303 - Use user id to fetch data. Temporarily hard code using user 1.
-  fetchUser(1)
+  fetchUser(2)
   .then(res => {
     for(let room of res.rooms) {
       renderRoom(roomList, room);
