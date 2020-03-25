@@ -45,7 +45,8 @@ function postUser(user) {
             return resp.json();
         })
         .then(function(data) {
-           let currentUser = data
+            console.log(data);
+           let currentUser = data;
         })
         .catch(console.error);  
 }
