@@ -9,20 +9,22 @@ function loginForm() {
 }
 
 function fetchUser(userId) {    
-    return fetch(`${endPoint}/${userId}`)   
-        .then(res => res.json())    
-        .catch(console.error);  
+    return fetch(`${endPoint}/${userId}`) 
+        .then(function(data){
+            console.log(data)
+        })    
+        .catch(console.error)  
   }
-  
+
 //  Sign Up
 //  Need to locate proper elements
-
 function eventSignUp() {
     const signUpButton = document.getElementById('sign-up-button')
     signUpButton.addEventListener('click', function(event) {
         signUpForm()
     })
 }
+
 function signUpForm() {
     const signUpForm = document.getElementById('sign-up-form')
     signUpForm.addEventListener('submit', function(event){
@@ -41,11 +43,8 @@ function postUser(user) {
         },
         body: JSON.stringify(user)
     })
-        .then(function(resp) {
-            return resp.json();
-        })
         .then(function(data) {
-            console.log(data);
+            // console.log(data);
            let currentUser = data;
         })
         .catch(console.error);  
