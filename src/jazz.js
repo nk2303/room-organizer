@@ -1,30 +1,34 @@
 //  Login
 function loginForm() {
-    let loginForm = document.getElementById('login-form') // assign form.id
+    let loginForm = document.getElementById() // assign id
     loginForm.addEventListener('submit', function(event) {
         event.preventDefault();
-        let user = { name: event.target.name.value}
+        let user = { name: event.target.name.value }
         fetchUser(user);
     })
 }
 
 function fetchUser(userId) {    
-    return fetch(`${endPoint}/${userId}`)   
-        .then(res => res.json())    
-        .catch(console.error);  
+    return fetch(`${endPoint}/${userId}`) 
+        .then(function(resp) {
+            return resp.json();
+        })
+        .then(function(data){
+            console.log(data)
+        })    
+        .catch(console.error)  
   }
-  
-//  Sign Up
-//  Need to locate proper elements
 
+//  Sign Up
 function eventSignUp() {
-    const signUpButton = document.getElementById('sign-up-button')
+    const signUpButton = document.getElementById() // assign id
     signUpButton.addEventListener('click', function(event) {
         signUpForm()
     })
 }
+
 function signUpForm() {
-    const signUpForm = document.getElementById('sign-up-form')
+    const signUpForm = document.getElementById() // assign id
     signUpForm.addEventListener('submit', function(event){
         event.preventDefault();
         let user = {name: event.target.name.value}
@@ -45,7 +49,6 @@ function postUser(user) {
             return resp.json();
         })
         .then(function(data) {
-            console.log(data);
            let currentUser = data;
         })
         .catch(console.error);  
