@@ -18,26 +18,44 @@ function fetchUser(userId) {
 }
 
 function renderRoom(rootContainer, roomObj) {
-  const roomContainer = document.createElement('div');
-  roomContainer.innerText = roomObj.name;
-  for(let storage of roomObj.storages) {
-    renderStorage(roomContainer, storage);
-  }
+  const roomContainer = renderDivElement(rootContainer, ['container']);
+  renderDivElement(roomContainer, ['row'], roomObj.name);
+  const storageListContainer = renderDivElement(roomContainer, ['row']);
 
-  rootContainer.appendChild(roomContainer);
+  for (let storage of roomObj.storages) {
+    renderStorage(storageListContainer, storage);
+  }
 }
 
-function renderStorage(roomContainer, storageObj) {
-  const storageContainer = document.createElement('div');
-  storageContainer.innerText = storageObj.name;
+function renderStorage(listContainer, storageObj) {
+  const storageContainer = renderDivElement(listContainer, ['col-4']);
+  const storageCard = renderDivElement(storageContainer, ['card']);
+  const storageBody = renderDivElement(storageCard, ['card-body']);
+  renderElement(storageBody, 'h5', ['card-title'], storageObj.name);
+
   for (let item of storageObj.items) {
-    renderItem(storageContainer, item);
+    renderItem(storageBody, item);
   }
-  roomContainer.appendChild(storageContainer);
 }
 
 function renderItem(storageContainer, itemObj) {
-  const itemContainer = document.createElement('p');
-  itemContainer.innerHTML = itemObj.name;
-  storageContainer.appendChild(itemContainer);
+  renderElement(storageContainer, 'p', ['card-text'], itemObj.name);
+}
+
+function renderDivElement(container, classList, labelText) {
+  return renderElement(container, 'div', classList, labelText);
+}
+
+function renderElement(parentElement, htmlTag, classList, innerText) {
+  const element = document.createElement(htmlTag);
+  if (innerText) {
+    element.innerText = innerText;
+  }
+  
+  if (classList) {
+    classList.forEach(className => element.classList.add(className));
+  }
+
+  parentElement.appendChild(element);
+  return element;
 }
