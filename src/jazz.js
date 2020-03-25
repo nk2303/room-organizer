@@ -15,7 +15,14 @@ function fetchUser(userId) {
   }
   
 //  Sign Up
-//  Need to locate proper elents
+//  Need to locate proper elements
+
+function eventSignUp() {
+    const signUpButton = document.getElementById('sign-up-button')
+    signUpButton.addEventListener('click', function(event) {
+        signUpForm()
+    })
+}
 function signUpForm() {
     const signUpForm = document.getElementById('sign-up-form')
     signUpForm.addEventListener('submit', function(event){
