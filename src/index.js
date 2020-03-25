@@ -11,12 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
   })
 });
 
-function fetchUser(userId) {
-  return fetch(`${endPoint}/${userId}`)
-      .then(res => res.json())
-      .catch(console.error);
-}
-
 function renderRoom(rootContainer, roomObj) {
   const roomContainer = renderDivElement(rootContainer, ['container']);
   renderDivElement(roomContainer, ['row'], roomObj.name);
@@ -58,4 +52,11 @@ function renderElement(parentElement, htmlTag, classList, innerText) {
 
   parentElement.appendChild(element);
   return element;
+}
+
+// Login
+function fetchUser(userId) {    
+  return fetch(`${endPoint}/${userId}`)   
+      .then(res => res.json())    
+      .catch(console.error);  
 }
