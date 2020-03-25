@@ -12,8 +12,8 @@ function fetchUser(userId) {
     return fetch(`${endPoint}/${userId}`) 
         .then(function(data){
             console.log(data)
-        }    
-        .catch(console.error);  
+        })    
+        .catch(console.error)  
   }
 
 //  Sign Up
