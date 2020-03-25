@@ -11,12 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
   })
 });
 
-function fetchUser(userId) {
-  return fetch(`${endPoint}/${userId}`)
-      .then(res => res.json())
-      .catch(console.error);
-}
-
 function renderRoom(rootContainer, roomObj) {
   const roomContainer = renderDivElement(rootContainer, ['container']);
   renderDivElement(roomContainer, ['row'], roomObj.name);
