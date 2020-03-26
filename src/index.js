@@ -19,6 +19,13 @@ document.addEventListener('DOMContentLoaded', () => {
   })
 });
 
+function deleteItem(itemId) {
+  fetch(`${itemEndPoint}/${itemId}`, {method: "DELETE"})
+  .then(console.log)
+  .catch(console.error);
+}
+
+
 function fetchUser(userId) {
   // TODO: @nk2303 - Use user id to fetch data. Temporarily hard code using user 1.
   return fetch(`${userEndPoint}/`)
@@ -55,7 +62,6 @@ function renderRoom(rootContainer, roomObj) {
   const storageButton = renderElement(storageListContainer, 'button', ['btn', 'btn-light'], 'Add Storage');
   storageButton.addEventListener('click', function() {
     renderEntityText(storageEndPoint, "storage", storageListContainer, storageButton);
-    // storageButton.style.display = "none";
     storageListContainer.removeChild(storageButton);
   });
   for (let storage of roomObj.storages) {
@@ -81,12 +87,15 @@ function renderStorage(listContainer, storageObj) {
 }
 
 function renderItem(storageContainer, itemObj) {
-  renderElement(storageContainer, 'p', ['card-text'], itemObj.name);
+  const itemElement = renderElement(storageContainer, 'p', ['card-text'], itemObj.name);
   const deleteItemButton = document.createElement("button") 
   deleteItemButton.textContent = "x";
   deleteItemButton.className = "deleteItem";
-  deleteItemButton.addEventListener("click", function(){
-    console.log("");
+  deleteItemButton.setAttribute('data-value', itemObj.id);
+  deleteItemButton.addEventListener("click", function(e){
+    deleteItem(e.target.dataset.value);
+    storageContainer.removeChild(deleteItemButton);
+    storageContainer.removeChild(itemElement);
   })
   storageContainer.appendChild(deleteItemButton);
 }
