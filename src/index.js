@@ -131,13 +131,13 @@ function renderStorage(listContainer, storageObj) {
 
 function renderItem(storageContainer, itemObj) {
   renderElement(storageContainer, 'p', ['card-text'], itemObj.name);
-  // const deleteItemButton = document.createElement("button") 
-  // deleteItemButton.textContent = "x";
-  // deleteItemButton.className = "deleteItem";
-  // deleteItemButton.addEventListener("click", function(){
-  //   console.log("");
-  // })
-  // storageContainer.appendChild(deleteItemButton);
+  const deleteItemButton = document.createElement("button") 
+  deleteItemButton.textContent = "x";
+  deleteItemButton.className = "deleteItem";
+  deleteItemButton.addEventListener("click", function(){
+    console.log("");
+  })
+  storageContainer.appendChild(deleteItemButton);
 }
 
 function renderDivElement(container, classList, labelText) {
@@ -167,7 +167,6 @@ function renderItemTextArea(storageBody, addItemButton){
   formtag.addEventListener("submit", function(event){
       event.preventDefault();
       const newItemName = event.target.itemname.value;
-      console.log(event.target.itemname.value);
       formtag.style.display = "none";
       renderItem(storageBody, {name: newItemName});
       postItem({name: newItemName, storage_id: storageBody.dataset["storageId"]});
@@ -190,7 +189,6 @@ function renderStorageText(storageListContainer, storageButton){
       event.preventDefault();
       formtag.style.display = "none";
       const newStorageName = event.target.storagename.value;
-      console.log(event.target.storagename.value);
       renderStorage(storageListContainer, {name: newStorageName, items: []});
       postStorage({name: newStorageName, room_id: storageListContainer.dataset["roomId"]});
       storageListContainer.appendChild(storageButton);
@@ -213,7 +211,6 @@ function renderNewRoomText(roomList, roomButton){
       event.preventDefault();
       formtag.style.display = "none";
       const newRoomName = event.target.roomname.value;
-      console.log(event.target.roomname.value);
       renderRoom(roomList, {name: newRoomName, storages: []})
       postRoom({name: newRoomName, user_id: roomList.dataset["userId"]});
       roomList.appendChild(roomButton);
