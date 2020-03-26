@@ -1,5 +1,7 @@
 const endPoint = "http://localhost:3000/api/v1/users"
 const itemEndPoint = "http://localhost:3000/api/v1/items"
+const storageEndPoint = "http://localhost:3000/api/v1/storages"
+const roomEndPoint = "http://localhost:3000/api/v1/rooms"
 
 document.addEventListener('DOMContentLoaded', () => {
   const roomList = document.querySelector('#room-list');
@@ -9,8 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
       renderRoom(roomList, room);
     }
     const roomButton = renderElement(roomList, 'button', ['row', 'btn', 'btn-light'], 'Add Room');
+    roomList.setAttribute('data-user-id', res[0].id)
     roomButton.addEventListener('click', function(){
-      renderNewRoomText(roomList);
+      renderNewRoomText(roomList, roomButton);
       roomButton.style.display = "none";
     });
   })
@@ -46,14 +49,63 @@ function postItem(item){
     .catch(console.error);
 } 
 
+function postStorage(storage){
+  fetch(storageEndPoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json"
+    },
+    body: JSON.stringify(storage)
+  })
+    .then(function(res) {
+      console.log(res);
+      return res.json();
+    })
+    .then(function(data) {
+      if (data.id) {
+        console.log(data);
+      } else {
+        console.log("SOMETHING WENT WRONG", data);
+      }
+    })
+    .catch(console.error);
+} 
+
+function postRoom(room){
+  fetch(roomEndPoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json"
+    },
+    body: JSON.stringify(room)
+  })
+    .then(function(res) {
+      console.log(res);
+      return res.json();
+    })
+    .then(function(data) {
+      if (data.id) {
+        console.log(data);
+      } else {
+        console.log("SOMETHING WENT WRONG", data);
+      }
+    })
+    .catch(console.error);
+} 
+
 function renderRoom(rootContainer, roomObj) {
   const roomContainer = renderDivElement(rootContainer, ['container']);
   renderDivElement(roomContainer, ['row'], roomObj.name);
   const storageListContainer = renderDivElement(roomContainer, ['row']);
-  const storageButton = renderElement(storageListContainer, 'button', ['btn', 'btn-light', 'col-3'], 'Add Storage');
+  storageListContainer.setAttribute('data-room-id', roomObj.id);
+
+  const storageButton = renderElement(storageListContainer, 'button', ['btn', 'btn-light'], 'Add Storage');
   storageButton.addEventListener('click', function(){
-    renderStorageText(storageListContainer);
-    storageButton.style.display = "none";
+    renderStorageText(storageListContainer, storageButton);
+    // storageButton.style.display = "none";
+    storageListContainer.removeChild(storageButton);
   });
   for (let storage of roomObj.storages) {
     renderStorage(storageListContainer, storage);
@@ -126,7 +178,7 @@ function renderItemTextArea(storageBody, addItemButton){
   storageBody.appendChild(formtag);
 }
 
-function renderStorageText(storageListContainer){
+function renderStorageText(storageListContainer, storageButton){
   const formtag = document.createElement('form');
   const inputE = document.createElement("input");
   inputE.placeholder = "Enter you new storage's name...";
@@ -136,9 +188,12 @@ function renderStorageText(storageListContainer){
   inputBtn.type = "submit"; // default
   formtag.addEventListener("submit", function(event){
       event.preventDefault();
-      const newStorage = event.target.storagename.value;
+      formtag.style.display = "none";
+      const newStorageName = event.target.storagename.value;
       console.log(event.target.storagename.value);
-      // addStorageToDOM(newStorage);  
+      renderStorage(storageListContainer, {name: newStorageName, items: []});
+      postStorage({name: newStorageName, room_id: storageListContainer.dataset["roomId"]});
+      storageListContainer.appendChild(storageButton);
   });
   formtag.appendChild(inputE);
   formtag.appendChild(inputBtn);
@@ -146,7 +201,7 @@ function renderStorageText(storageListContainer){
   
 }
 
-function renderNewRoomText(roomList){
+function renderNewRoomText(roomList, roomButton){
   const formtag = document.createElement('form');
   const inputE = document.createElement("input");
   inputE.placeholder = "Enter you new room's name...";
@@ -156,9 +211,12 @@ function renderNewRoomText(roomList){
   inputBtn.type = "submit"; // default
   formtag.addEventListener("submit", function(event){
       event.preventDefault();
-      const newRoom = event.target.roomname.value;
+      formtag.style.display = "none";
+      const newRoomName = event.target.roomname.value;
       console.log(event.target.roomname.value);
-      // addRoomToDOM(newRoom);  
+      renderRoom(roomList, {name: newRoomName, storages: []})
+      postRoom({name: newStorageName, user_id: roomList.dataset["userId"]});
+      roomList.appendChild(storageButton);
   });
   formtag.appendChild(inputE);
   formtag.appendChild(inputBtn);
