@@ -1,4 +1,5 @@
 const endPoint = "http://localhost:3000/api/v1/users"
+const itemEndPoint = "http://localhost:3000/api/v1/items"
 
 document.addEventListener('DOMContentLoaded', () => {
   const roomList = document.querySelector('#room-list');
@@ -22,6 +23,29 @@ function fetchUser(userId) {
       .catch(console.error);
 }
 
+function postItem(item){
+  fetch(itemEndPoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json"
+    },
+    body: JSON.stringify(item)
+  })
+    .then(function(res) {
+      console.log(res);
+      return res.json();
+    })
+    .then(function(data) {
+      if (data.id) {
+        console.log(data);
+      } else {
+        console.log("SOMETHING WENT WRONG", data);
+      }
+    })
+    .catch(console.error);
+} 
+
 function renderRoom(rootContainer, roomObj) {
   const roomContainer = renderDivElement(rootContainer, ['container']);
   renderDivElement(roomContainer, ['row'], roomObj.name);
@@ -40,6 +64,7 @@ function renderStorage(listContainer, storageObj) {
   const storageContainer = renderDivElement(listContainer, ['col-3']);
   const storageCard = renderDivElement(storageContainer, ['card']);
   const storageBody = renderDivElement(storageCard, ['card-body']);
+  storageBody.setAttribute('data-storage-id', storageObj.id);
   renderElement(storageBody, 'h5', ['card-title'], storageObj.name);
   for (let item of storageObj.items) {
     renderItem(storageBody, item);
@@ -47,8 +72,8 @@ function renderStorage(listContainer, storageObj) {
 
   const itemButton = renderElement(storageBody, 'button', ['btn', 'btn-light'], 'Add Item');
   itemButton.addEventListener('click', function(){
-    renderItemTextArea(storageBody);
-    itemButton.style.display = "none";
+    renderItemTextArea(storageBody, itemButton);
+    storageBody.removeChild(itemButton);
   });
 }
 
@@ -72,49 +97,70 @@ function renderElement(parentElement, htmlTag, classList, innerText) {
   if (innerText) {
     element.innerText = innerText;
   }
-  
   if (classList) {
     classList.forEach(className => element.classList.add(className));
   }
-
   parentElement.appendChild(element);
   return element;
 }
 
-function renderItemTextArea(storageBody){
-  const inputE = document.createElement('input');
-  const buttnE = document.createElement('input');
-  buttnE.type = "submit";
-  buttnE.value = "Create";
+function renderItemTextArea(storageBody, addItemButton){
+  const formtag = document.createElement('form');
+  const inputE = document.createElement("input");
+  inputE.placeholder = "Enter you new item's name...";
   inputE.type = "text";
-  inputE.placeholder = "Enter you new item's name here...";
-  inputE.id = "new-item";
-  storageBody.appendChild(inputE);
-  storageBody.appendChild(buttnE);
+  inputE.name = "itemname";
+  const inputBtn = document.createElement("input");
+  inputBtn.type = "submit"; // default
+  formtag.addEventListener("submit", function(event){
+      event.preventDefault();
+      const newItemName = event.target.itemname.value;
+      console.log(event.target.itemname.value);
+      formtag.style.display = "none";
+      renderItem(storageBody, {name: newItemName});
+      postItem({name: newItemName, storage_id: storageBody.dataset["storageId"]});
+      storageBody.appendChild(addItemButton);
+  });
+  formtag.appendChild(inputE);
+  formtag.appendChild(inputBtn);
+  storageBody.appendChild(formtag);
 }
 
 function renderStorageText(storageListContainer){
-  const inputE = document.createElement('input');
-  const buttnE = document.createElement('input');
-  buttnE.type = "submit";
-  buttnE.value = "Create";
+  const formtag = document.createElement('form');
+  const inputE = document.createElement("input");
+  inputE.placeholder = "Enter you new storage's name...";
   inputE.type = "text";
-  inputE.placeholder = "Enter you new storage's name here...";
-  inputE.id = "new-item";
-  storageListContainer.prepend(buttnE);
-  storageListContainer.prepend(inputE);
+  inputE.name = "storagename";
+  const inputBtn = document.createElement("input");
+  inputBtn.type = "submit"; // default
+  formtag.addEventListener("submit", function(event){
+      event.preventDefault();
+      const newStorage = event.target.storagename.value;
+      console.log(event.target.storagename.value);
+      // addStorageToDOM(newStorage);  
+  });
+  formtag.appendChild(inputE);
+  formtag.appendChild(inputBtn);
+  storageListContainer.prepend(formtag);
   
 }
 
 function renderNewRoomText(roomList){
-  const inputE = document.createElement('input');
-  const buttnE = document.createElement('input');
-  buttnE.type = "submit";
-  buttnE.value = "Create";
+  const formtag = document.createElement('form');
+  const inputE = document.createElement("input");
+  inputE.placeholder = "Enter you new room's name...";
   inputE.type = "text";
-  inputE.placeholder = "Enter you new room's name here...";
-  inputE.id = "new-room";
-  roomList.appendChild(inputE);
-  roomList.appendChild(buttnE);
-
+  inputE.name = "roomname";
+  const inputBtn = document.createElement("input");
+  inputBtn.type = "submit"; // default
+  formtag.addEventListener("submit", function(event){
+      event.preventDefault();
+      const newRoom = event.target.roomname.value;
+      console.log(event.target.roomname.value);
+      // addRoomToDOM(newRoom);  
+  });
+  formtag.appendChild(inputE);
+  formtag.appendChild(inputBtn);
+  roomList.appendChild(formtag);
 };
