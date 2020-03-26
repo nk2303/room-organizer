@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const roomButton = renderElement(roomList, 'button', ['row', 'btn', 'btn-light'], 'Add Room');
     roomButton.addEventListener('click', function(){
       renderNewRoomText(roomList);
+      roomButton.style.display = "none";
     });
   })
 });
@@ -25,9 +26,10 @@ function renderRoom(rootContainer, roomObj) {
   const roomContainer = renderDivElement(rootContainer, ['container']);
   renderDivElement(roomContainer, ['row'], roomObj.name);
   const storageListContainer = renderDivElement(roomContainer, ['row']);
-  const storageButton = renderElement(storageListContainer, 'button', ['btn', 'btn-light'], 'Add Storage');
+  const storageButton = renderElement(storageListContainer, 'button', ['btn', 'btn-light', 'col-3'], 'Add Storage');
   storageButton.addEventListener('click', function(){
     renderStorageText(storageListContainer);
+    storageButton.style.display = "none";
   });
   for (let storage of roomObj.storages) {
     renderStorage(storageListContainer, storage);
@@ -35,7 +37,7 @@ function renderRoom(rootContainer, roomObj) {
 }
 
 function renderStorage(listContainer, storageObj) {
-  const storageContainer = renderDivElement(listContainer, ['col-4']);
+  const storageContainer = renderDivElement(listContainer, ['col-3']);
   const storageCard = renderDivElement(storageContainer, ['card']);
   const storageBody = renderDivElement(storageCard, ['card-body']);
   renderElement(storageBody, 'h5', ['card-title'], storageObj.name);
@@ -46,6 +48,7 @@ function renderStorage(listContainer, storageObj) {
   const itemButton = renderElement(storageBody, 'button', ['btn', 'btn-light'], 'Add Item');
   itemButton.addEventListener('click', function(){
     renderItemTextArea(storageBody);
+    itemButton.style.display = "none";
   });
 }
 
@@ -98,8 +101,9 @@ function renderStorageText(storageListContainer){
   inputE.type = "text";
   inputE.placeholder = "Enter you new storage's name here...";
   inputE.id = "new-item";
-  storageListContainer.appendChild(inputE);
-  storageListContainer.appendChild(buttnE);
+  storageListContainer.prepend(buttnE);
+  storageListContainer.prepend(inputE);
+  
 }
 
 function renderNewRoomText(roomList){
