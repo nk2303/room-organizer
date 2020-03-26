@@ -1,4 +1,4 @@
-const endPoint = "http://localhost:3000/api/v1/users"
+const userEndPoint = "http://localhost:3000/api/v1/users"
 const itemEndPoint = "http://localhost:3000/api/v1/items"
 const storageEndPoint = "http://localhost:3000/api/v1/storages"
 const roomEndPoint = "http://localhost:3000/api/v1/rooms"
@@ -12,8 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     const roomButton = renderElement(roomList, 'button', ['row', 'btn', 'btn-light'], 'Add Room');
     roomList.setAttribute('data-user-id', res[0].id)
-    roomButton.addEventListener('click', function(){
-      renderNewRoomText(roomList, roomButton);
+    roomButton.addEventListener('click', function() {
+      renderEntityText(roomEndPoint, "room", roomList, roomButton);
       roomButton.style.display = "none";
     });
   })
@@ -21,74 +21,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function fetchUser(userId) {
   // TODO: @nk2303 - Use user id to fetch data. Temporarily hard code using user 1.
-  return fetch(`${endPoint}/`)
+  return fetch(`${userEndPoint}/`)
       .then(res => res.json())
       .catch(console.error);
 }
 
-function postItem(item){
-  fetch(itemEndPoint, {
+function post(endPoint, entity) {
+  fetch(endPoint, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json"
     },
-    body: JSON.stringify(item)
+    body: JSON.stringify(entity)
   })
     .then(function(res) {
-      console.log(res);
       return res.json();
     })
     .then(function(data) {
-      if (data.id) {
-        console.log(data);
-      } else {
-        console.log("SOMETHING WENT WRONG", data);
-      }
-    })
-    .catch(console.error);
-} 
-
-function postStorage(storage){
-  fetch(storageEndPoint, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json"
-    },
-    body: JSON.stringify(storage)
-  })
-    .then(function(res) {
-      console.log(res);
-      return res.json();
-    })
-    .then(function(data) {
-      if (data.id) {
-        console.log(data);
-      } else {
-        console.log("SOMETHING WENT WRONG", data);
-      }
-    })
-    .catch(console.error);
-} 
-
-function postRoom(room){
-  fetch(roomEndPoint, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json"
-    },
-    body: JSON.stringify(room)
-  })
-    .then(function(res) {
-      console.log(res);
-      return res.json();
-    })
-    .then(function(data) {
-      if (data.id) {
-        console.log(data);
-      } else {
+      if (!data.id) {
         console.log("SOMETHING WENT WRONG", data);
       }
     })
@@ -102,8 +53,8 @@ function renderRoom(rootContainer, roomObj) {
   storageListContainer.setAttribute('data-room-id', roomObj.id);
 
   const storageButton = renderElement(storageListContainer, 'button', ['btn', 'btn-light'], 'Add Storage');
-  storageButton.addEventListener('click', function(){
-    renderStorageText(storageListContainer, storageButton);
+  storageButton.addEventListener('click', function() {
+    renderEntityText(storageEndPoint, "storage", storageListContainer, storageButton);
     // storageButton.style.display = "none";
     storageListContainer.removeChild(storageButton);
   });
@@ -123,8 +74,8 @@ function renderStorage(listContainer, storageObj) {
   }
 
   const itemButton = renderElement(storageBody, 'button', ['btn', 'btn-light'], 'Add Item');
-  itemButton.addEventListener('click', function(){
-    renderItemTextArea(storageBody, itemButton);
+  itemButton.addEventListener('click', function() {
+    renderEntityText(itemEndPoint, "item", storageBody, itemButton);
     storageBody.removeChild(itemButton);
   });
 }
@@ -156,66 +107,34 @@ function renderElement(parentElement, htmlTag, classList, innerText) {
   return element;
 }
 
-function renderItemTextArea(storageBody, addItemButton){
+function renderEntityText(endPoint, entity, list, button) {
   const formtag = document.createElement('form');
   const inputE = document.createElement("input");
-  inputE.placeholder = "Enter you new item's name...";
+  inputE.placeholder = `Enter you new ${entity}'s name...`;
   inputE.type = "text";
-  inputE.name = "itemname";
+  inputE.name = "targetName";
   const inputBtn = document.createElement("input");
   inputBtn.type = "submit"; // default
-  formtag.addEventListener("submit", function(event){
+  formtag.addEventListener("submit", function(event) {
       event.preventDefault();
-      const newItemName = event.target.itemname.value;
       formtag.style.display = "none";
-      renderItem(storageBody, {name: newItemName});
-      postItem({name: newItemName, storage_id: storageBody.dataset["storageId"]});
-      storageBody.appendChild(addItemButton);
+      const newName = event.target.targetName.value;
+      switch(entity) {
+        case "room":
+          renderRoom(list, {name: newName, storages: []});
+          post(roomEndPoint, {name: newName, user_id: list.dataset["userId"]});
+          break;
+        case "storage":
+          renderStorage(list, {name: newName, items: []});
+          post(storageEndPoint, {name: newName, room_id: list.dataset["roomId"]});
+          break;
+        case "item":
+          renderItem(list, {name: newName});
+          post(itemEndPoint, {name: newName, storage_id: list.dataset["storageId"]});
+      }
+      list.appendChild(button);
   });
   formtag.appendChild(inputE);
   formtag.appendChild(inputBtn);
-  storageBody.appendChild(formtag);
+  list.appendChild(formtag);
 }
-
-function renderStorageText(storageListContainer, storageButton){
-  const formtag = document.createElement('form');
-  const inputE = document.createElement("input");
-  inputE.placeholder = "Enter you new storage's name...";
-  inputE.type = "text";
-  inputE.name = "storagename";
-  const inputBtn = document.createElement("input");
-  inputBtn.type = "submit"; // default
-  formtag.addEventListener("submit", function(event){
-      event.preventDefault();
-      formtag.style.display = "none";
-      const newStorageName = event.target.storagename.value;
-      renderStorage(storageListContainer, {name: newStorageName, items: []});
-      postStorage({name: newStorageName, room_id: storageListContainer.dataset["roomId"]});
-      storageListContainer.appendChild(storageButton);
-  });
-  formtag.appendChild(inputE);
-  formtag.appendChild(inputBtn);
-  storageListContainer.prepend(formtag);
-  
-}
-
-function renderNewRoomText(roomList, roomButton){
-  const formtag = document.createElement('form');
-  const inputE = document.createElement("input");
-  inputE.placeholder = "Enter you new room's name...";
-  inputE.type = "text";
-  inputE.name = "roomname";
-  const inputBtn = document.createElement("input");
-  inputBtn.type = "submit"; // default
-  formtag.addEventListener("submit", function(event){
-      event.preventDefault();
-      formtag.style.display = "none";
-      const newRoomName = event.target.roomname.value;
-      renderRoom(roomList, {name: newRoomName, storages: []})
-      postRoom({name: newRoomName, user_id: roomList.dataset["userId"]});
-      roomList.appendChild(roomButton);
-  });
-  formtag.appendChild(inputE);
-  formtag.appendChild(inputBtn);
-  roomList.appendChild(formtag);
-};
