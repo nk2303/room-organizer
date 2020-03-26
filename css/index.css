@@ -1,4 +1,8 @@
 #chrome-container {
+
     background-image: url('../assets/kids-rooms-neutral1.png');
     min-height: 800px;
+    background-size:cover;
+    background-color: black;
+    background-color: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
 }
