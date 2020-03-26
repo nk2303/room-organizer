@@ -215,8 +215,8 @@ function renderNewRoomText(roomList, roomButton){
       const newRoomName = event.target.roomname.value;
       console.log(event.target.roomname.value);
       renderRoom(roomList, {name: newRoomName, storages: []})
-      postRoom({name: newStorageName, user_id: roomList.dataset["userId"]});
-      roomList.appendChild(storageButton);
+      postRoom({name: newRoomName, user_id: roomList.dataset["userId"]});
+      roomList.appendChild(roomButton);
   });
   formtag.appendChild(inputE);
   formtag.appendChild(inputBtn);
