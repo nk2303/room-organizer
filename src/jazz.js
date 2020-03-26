@@ -1,20 +1,22 @@
+const endPoint = "http://localhost:3000/api/v1/users"
+let currentUser = null
 //  Login
 function loginForm() {
     let loginForm = document.getElementById() // assign id
     loginForm.addEventListener('submit', function(event) {
         event.preventDefault();
-        let user = { name: event.target.name.value }
-        fetchUser(user);
+        let userId = { name: event.target.name.value } // find by user name, get id, 
+        fetchUser(userId);
     })
 }
 
-function fetchUser(userId) {    
+function fetchUser(userId) {  
     return fetch(`${endPoint}/${userId}`) 
         .then(function(resp) {
             return resp.json();
         })
         .then(function(data){
-            console.log(data)
+            currentUser = data
         })    
         .catch(console.error)  
   }
