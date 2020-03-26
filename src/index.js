@@ -1,4 +1,4 @@
-const endPoint = "http://localhost:3000/api/v1/users"
+const userEndPoint = "http://localhost:3000/api/v1/users"
 const itemEndPoint = "http://localhost:3000/api/v1/items"
 const storageEndPoint = "http://localhost:3000/api/v1/storages"
 const roomEndPoint = "http://localhost:3000/api/v1/rooms"
@@ -12,8 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     const roomButton = renderElement(roomList, 'button', ['row', 'btn', 'btn-light'], 'Add Room');
     roomList.setAttribute('data-user-id', res[0].id)
-    roomButton.addEventListener('click', function(){
-      renderNewRoomText(roomList, roomButton);
+    roomButton.addEventListener('click', function() {
+      renderRoomText(roomList, roomButton);
       roomButton.style.display = "none";
     });
   })
@@ -21,58 +21,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function fetchUser(userId) {
   // TODO: @nk2303 - Use user id to fetch data. Temporarily hard code using user 1.
-  return fetch(`${endPoint}/`)
+  return fetch(`${userEndPoint}/`)
       .then(res => res.json())
       .catch(console.error);
 }
 
-function postItem(item){
-  fetch(itemEndPoint, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json"
-    },
-    body: JSON.stringify(item)
-  })
-    .then(function(res) {
-      console.log(res);
-      return res.json();
-    })
-    .then(function(data) {
-      if (data.id) {
-        console.log(data);
-      } else {
-        console.log("SOMETHING WENT WRONG", data);
-      }
-    })
-    .catch(console.error);
-} 
+// function postUser(user){
 
-function postStorage(storage){
-  fetch(storageEndPoint, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json"
-    },
-    body: JSON.stringify(storage)
-  })
-    .then(function(res) {
-      console.log(res);
-      return res.json();
-    })
-    .then(function(data) {
-      if (data.id) {
-        console.log(data);
-      } else {
-        console.log("SOMETHING WENT WRONG", data);
-      }
-    })
-    .catch(console.error);
-} 
-
-function postRoom(room){
+function postRoom(room) {
   fetch(roomEndPoint, {
     method: "POST",
     headers: {
@@ -95,6 +51,49 @@ function postRoom(room){
     .catch(console.error);
 } 
 
+function postStorage(storage) {
+  fetch(storageEndPoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json"
+    },
+    body: JSON.stringify(storage)
+  })
+    .then(function(res) {
+      console.log(res);
+      return res.json();
+    })
+    .then(function(data) {
+      if (data.id) {
+        console.log(data);
+      } else {
+        console.log("SOMETHING WENT WRONG", data);
+      }
+    })
+    .catch(console.error);
+}
+
+function postItem(item) {
+  fetch(itemEndPoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json"
+    },
+    body: JSON.stringify(item)
+  })
+    .then(function(res) {
+      return res.json();
+    })
+    .then(function(data) {
+      if (!data.id) {
+        console.log("SOMETHING WENT WRONG", data);
+      }
+    })
+    .catch(console.error);
+}
+
 function renderRoom(rootContainer, roomObj) {
   const roomContainer = renderDivElement(rootContainer, ['container']);
   renderDivElement(roomContainer, ['row'], roomObj.name);
@@ -102,7 +101,7 @@ function renderRoom(rootContainer, roomObj) {
   storageListContainer.setAttribute('data-room-id', roomObj.id);
 
   const storageButton = renderElement(storageListContainer, 'button', ['btn', 'btn-light'], 'Add Storage');
-  storageButton.addEventListener('click', function(){
+  storageButton.addEventListener('click', function() {
     renderStorageText(storageListContainer, storageButton);
     // storageButton.style.display = "none";
     storageListContainer.removeChild(storageButton);
@@ -123,8 +122,8 @@ function renderStorage(listContainer, storageObj) {
   }
 
   const itemButton = renderElement(storageBody, 'button', ['btn', 'btn-light'], 'Add Item');
-  itemButton.addEventListener('click', function(){
-    renderItemTextArea(storageBody, itemButton);
+  itemButton.addEventListener('click', function() {
+    renderItemText(storageBody, itemButton);
     storageBody.removeChild(itemButton);
   });
 }
@@ -134,7 +133,7 @@ function renderItem(storageContainer, itemObj) {
   // const deleteItemButton = document.createElement("button") 
   // deleteItemButton.textContent = "x";
   // deleteItemButton.className = "deleteItem";
-  // deleteItemButton.addEventListener("click", function(){
+  // deleteItemButton.addEventListener("click", function() {
   //   console.log("");
   // })
   // storageContainer.appendChild(deleteItemButton);
@@ -156,29 +155,29 @@ function renderElement(parentElement, htmlTag, classList, innerText) {
   return element;
 }
 
-function renderItemTextArea(storageBody, addItemButton){
+function renderRoomText(roomList, roomButton){
   const formtag = document.createElement('form');
   const inputE = document.createElement("input");
-  inputE.placeholder = "Enter you new item's name...";
+  inputE.placeholder = "Enter you new room's name...";
   inputE.type = "text";
-  inputE.name = "itemname";
+  inputE.name = "roomname";
   const inputBtn = document.createElement("input");
   inputBtn.type = "submit"; // default
   formtag.addEventListener("submit", function(event){
       event.preventDefault();
-      const newItemName = event.target.itemname.value;
-      console.log(event.target.itemname.value);
       formtag.style.display = "none";
-      renderItem(storageBody, {name: newItemName});
-      postItem({name: newItemName, storage_id: storageBody.dataset["storageId"]});
-      storageBody.appendChild(addItemButton);
+      const newRoomName = event.target.roomname.value;
+      console.log(event.target.roomname.value);
+      renderRoom(roomList, {name: newRoomName, storages: []})
+      postRoom({name: newRoomName, user_id: roomList.dataset["userId"]});
+      roomList.appendChild(roomButton);
   });
   formtag.appendChild(inputE);
   formtag.appendChild(inputBtn);
-  storageBody.appendChild(formtag);
+  roomList.appendChild(formtag);
 }
 
-function renderStorageText(storageListContainer, storageButton){
+function renderStorageText(storageListContainer, storageButton) {
   const formtag = document.createElement('form');
   const inputE = document.createElement("input");
   inputE.placeholder = "Enter you new storage's name...";
@@ -201,24 +200,24 @@ function renderStorageText(storageListContainer, storageButton){
   
 }
 
-function renderNewRoomText(roomList, roomButton){
+function renderItemText(storageBody, addItemButton) {
   const formtag = document.createElement('form');
   const inputE = document.createElement("input");
-  inputE.placeholder = "Enter you new room's name...";
+  inputE.placeholder = "Enter you new item's name...";
   inputE.type = "text";
-  inputE.name = "roomname";
+  inputE.name = "itemname";
   const inputBtn = document.createElement("input");
   inputBtn.type = "submit"; // default
   formtag.addEventListener("submit", function(event){
       event.preventDefault();
+      const newItemName = event.target.itemname.value;
+      console.log(event.target.itemname.value);
       formtag.style.display = "none";
-      const newRoomName = event.target.roomname.value;
-      console.log(event.target.roomname.value);
-      renderRoom(roomList, {name: newRoomName, storages: []})
-      postRoom({name: newRoomName, user_id: roomList.dataset["userId"]});
-      roomList.appendChild(roomButton);
+      renderItem(storageBody, {name: newItemName});
+      postItem({name: newItemName, storage_id: storageBody.dataset["storageId"]});
+      storageBody.appendChild(addItemButton);
   });
   formtag.appendChild(inputE);
   formtag.appendChild(inputBtn);
-  roomList.appendChild(formtag);
-};
+  storageBody.appendChild(formtag);
+}
