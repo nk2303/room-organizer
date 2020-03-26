@@ -1,12 +1,39 @@
-const endPoint = "http://localhost:3000/api/v1/users"
-
-const itemEndPoint = "http://localhost:3000/api/v1/items"
-
-const roomEndPoint = "http://localhost:3000/api/v1/rooms"
-
-const roomEndPoint = "http://localhost:3000/api/v1/storages"
 
 
 
-fetch(endPoint).then(function(res){return res.json()})
 
+
+
+//delete button 
+
+
+
+let itemId = itemEndPoint.id
+
+//const itemP = 
+
+let deleteItemButton = document.createElement("button")
+
+deleteItemButton.textContent = "x";
+deleteItemButton.className = "deleteItem";
+deleteItemButton.addEventListener("click", function(){
+    deleteItemP(itemP);
+    deleteItem(itemId);
+})
+
+function deleteItem(itemId){
+    fetch(`${itemEndPoint}/${itemId}`,{
+        method: "DELETE"
+    })
+    .then(function(res){
+        return res.json();
+    })
+    .then(function(data){
+        console.log(data);
+    })
+}
+
+function deleteItemP(p){
+    parentCard = div.querySelector("card-body")
+    parentCard.removeChild(p);
+}
