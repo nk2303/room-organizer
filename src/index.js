@@ -32,19 +32,18 @@ document.addEventListener('DOMContentLoaded', () => {
       fetchUsers(usersArray);
       currentUser = usersArray.find(element => element.name == event.target.username.value);
     }
+    const roomButtonWrapper = renderDivElement(roomList, ['container']);
+    const roomButton = renderElement(roomButtonWrapper, 'button', ['row', 'btn', 'btn-light'], '+ Add Room');
 
-    login.hidden = true;
-    loginForm.hidden = true;
-    logout.hidden = false;
-    sideBar.hidden = false;
+    // const storageButtonWrapper = renderDivElement(storageListContainer, ['col-3']);
+    // const storageButton = renderElement(storageButtonWrapper, 'button', ['btn', 'btn-light', 'block'], '+ Add Storage');
+    
+    // storageButton.addEventListener('click', function() {
+    //   renderEntityText(storageEndPoint, "storage", storageListContainer, storageButton);
+    //   storageListContainer.removeChild(storageButtonWrapper);
+    // });
 
-    let greetingLocation = document.querySelector("#topbar #greeting");
-    let greeting = document.createElement("p");
-    greeting.innerText = `Welcome home, ${event.target.username.value}.`
-    greetingLocation.appendChild(greeting);
-
-    const roomButton = renderElement(roomList, 'button', ['row', 'btn', 'btn-light'], '+ Add Room');
-    roomList.setAttribute('data-user-id', currentUser.id)
+    roomList.setAttribute('data-user-id', res[0].id)
     roomButton.addEventListener('click', function() {
 
       fetchUsers(usersArray);
@@ -160,14 +159,15 @@ function renderRoom(rootContainer, roomObj) {
   const storageListContainer = renderDivElement(roomContainer, ['row']);
   storageListContainer.setAttribute('data-room-id', roomObj.id);
 
-  const storageButtonWrapper = renderDivElement(storageListContainer, ['col-3']);
-  const storageButton = renderElement(storageButtonWrapper, 'button', ['btn', 'btn-light'], '+ Add Storage');
-  storageButton.addEventListener('click', function() {
-    renderEntityText(storageEndPoint, "storage", storageListContainer, storageButton);
-  });
   for (let storage of roomObj.storages) {
     renderStorage(storageListContainer, storage);
   }
+  const storageButtonWrapper = renderDivElement(storageListContainer, ['col-3']);
+  const storageButton = renderElement(storageButtonWrapper, 'button', ['btn', 'btn-light', 'block'], '+ Add Storage');
+  storageButton.addEventListener('click', function() {
+    renderEntityText(storageEndPoint, "storage", storageListContainer, storageButton);
+    storageListContainer.removeChild(storageButtonWrapper);
+  });
 }
 
 function renderStorage(listContainer, storageObj) {
@@ -176,6 +176,30 @@ function renderStorage(listContainer, storageObj) {
   const storageBody = renderDivElement(storageCard, ['card-body']);
   storageBody.setAttribute('data-storage-id', storageObj.id);
   renderElement(storageBody, 'h5', ['card-title'], storageObj.name);
+  for (let item of storageObj.items) {
+    renderItem(storageBody, item);
+  }
+
+  const deleteStorageButton = document.createElement("button");
+  const divDelStor = document.createElement("div");
+  divDelStor.classList.add("margin-3");
+  deleteStorageButton.textContent = "Delete Storage"; 
+  deleteStorageButton.className = "deleteStorage";
+  deleteStorageButton.classList.add('btn-light');
+  deleteStorageButton.classList.add("font-size-14");
+  deleteStorageButton.classList.add("block-narrow");
+  deleteStorageButton.setAttribute('data-value', storageObj.id);
+  deleteStorageButton.addEventListener("click", function(e){
+    console.log(e.target.dataset.value);
+    deleteStorage(e.target.dataset.value);
+    storageObj.items.forEach(item => { 
+      //console.log(item)
+    })
+    listContainer.removeChild(storageContainer);
+    let openStorage = document.getElementById("open-storage")
+  })
+  divDelStor.appendChild(deleteStorageButton);
+  storageContainer.appendChild(divDelStor);
   for (let item of storageObj.items) {
     renderItem(storageBody, item);
   }

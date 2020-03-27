@@ -6,6 +6,28 @@
     background-size:cover;
 }
 
+.margin-3 {
+    margin: 3px;
+}
+
+.block {
+    display: block;
+    width: 100%;
+    border: none;
+    padding: 14px 28px;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  .block-narrow {
+    display: block;
+    width: 100%;
+    border: none;
+    padding: 6px 28px;
+    cursor: pointer;
+    text-align: center;
+  }
+
 #room-list > .container {
     background-color: #EBECF0;
     margin: 8px;
