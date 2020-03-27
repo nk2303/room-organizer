@@ -13,3 +13,23 @@
     padding: 30px;
 }
 
+.font-size-14 {
+    font-size: 14px;
+}
+
+#topbar {
+    color: white;
+    font-size: 14px;
+}
+
+.card-title {
+    font-size: 15px;
+}
+
+.font-size-20 {
+    font-size: 20px;
+}
+
+.btn-light{
+    font-size: 14px;
+}

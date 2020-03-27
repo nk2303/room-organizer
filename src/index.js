@@ -55,7 +55,7 @@ function post(endPoint, entity) {
 
 function renderRoom(rootContainer, roomObj) {
   const roomContainer = renderDivElement(rootContainer, ['container']);
-  renderDivElement(roomContainer, ['row'], roomObj.name);
+  renderDivElement(roomContainer, ['row', 'font-size-20'], roomObj.name);
   const storageListContainer = renderDivElement(roomContainer, ['row']);
   storageListContainer.setAttribute('data-room-id', roomObj.id);
 
@@ -87,18 +87,23 @@ function renderStorage(listContainer, storageObj) {
 }
 
 function renderItem(storageContainer, itemObj) {
-  const itemElement = renderElement(storageContainer, 'p', ['card-text'], itemObj.name);
-  const deleteItemButton = document.createElement("button") 
+  const itemElement = renderElement(storageContainer, 'span', ['card-text', 'font-size-14'], itemObj.name); ////what
+  const deleteItemButton = document.createElement("button");
+  const divE = document.createElement('div');
   deleteItemButton.textContent = "x";
   deleteItemButton.className = "deleteItem";
+  deleteItemButton.classList.add("close");
+  deleteItemButton.classList.add("font-size-14")
   deleteItemButton.setAttribute('data-value', itemObj.id);
   deleteItemButton.addEventListener("click", function(e){
     deleteItem(e.target.dataset.value);
-    storageContainer.removeChild(deleteItemButton);
-    storageContainer.removeChild(itemElement);
+    storageContainer.removeChild(divE);
   })
-  storageContainer.appendChild(deleteItemButton);
+  divE.appendChild(deleteItemButton);
+  divE.appendChild(itemElement);
+  storageContainer.appendChild(divE);
 }
+
 
 function renderDivElement(container, classList, labelText) {
   return renderElement(container, 'div', classList, labelText);
