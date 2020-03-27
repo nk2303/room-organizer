@@ -5,18 +5,34 @@
     min-height: 800px;
     background-size:cover;
 }
-
+.margin-3 {
+    margin: 3px;
+}
+.block {
+    display: block;
+    width: 100%;
+    border: none;
+    padding: 14px 28px;
+    cursor: pointer;
+    text-align: center;
+  }
+  .block-narrow {
+    display: block;
+    width: 100%;
+    border: none;
+    padding: 6px 28px;
+    cursor: pointer;
+    text-align: center;
+  }
 #room-list > .container {
     background-color: #EBECF0;
     margin: 8px;
     border-radius: 5px;
     padding: 10px 30px 10px 30px;
 }
-
 .font-size-14 {
     font-size: 14px;
 }
-
 #topbar {
     color: white;
     font-size: 14px;
@@ -25,20 +41,16 @@
     margin-bottom: 40px;
     /* vertical-align: middle */
 }
-
 .card-title {
     font-size: 15px;
 }
-
 .font-size-16 {
     font-size: 16px;
     font-weight: bold;
 }
-
 .btn-light{
     font-size: 14px;
 }
-
 #pop-up-main-div{
     position: absolute;
     width: 800px;
@@ -53,7 +65,6 @@
     box-shadow: 10px 10px 5px rgb(52, 50, 50);
     display: none;
 }
-
 #close-pop-up-div{
     position: absolute;
     width: 25px;
@@ -65,27 +76,32 @@
     top: 5px;
     cursor: pointer;
 }
-
 #close-pop-up-div p{
     margin-top: 1px;
     font-family: sans-serif;
     font-weight: bold;
 }
-
 #pop-up-header{
     text-align: center;
     font-family: sans-serif;
     font-size: 30px;
 }
-
 #pop-up-body{
     font-family: sans-serif;
     text-align: center;
     margin-top: 80px;
 }
-
 .open-storage-box {
     position: absolute;
     bottom: 0;
     left: 0;
+}
+
+#logout {
+    color: black;
+    background-color: white;;
+}
+#search {
+    color: black;
+    background-color: white;;
 }
