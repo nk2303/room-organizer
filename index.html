@@ -22,12 +22,20 @@
         <div class="col-4">
           Room Organizer!
         </div>
-        <div class="col-4">
-          Welcome, (Anthony). This is your place.
+        <div id="greeting" class="col-4">
+          <!-- populated by js with greeting -->
         </div>
-        <button class="col-1" type='button'>Log out</button>
-      </header>
 
+        <form id="loginForm" class="form">
+          <input class="form-control" type="text" placeholder="Username" name="username">
+          <div class="input-group-append">
+            <button id="login" class="btn btn-outline-secondary" type="input">Log in</button>
+          </div>
+        </form>
+        
+        <button hidden id='logout' class="btn btn-outline-secondary" type='button'>Log out</button>
+      </header>
+      
       <div class="container-fluid row">
           <sidebar class='left-side-menu col-3'>
             <div class="row">
@@ -64,4 +72,3 @@
 
 </body>
 </html>
-

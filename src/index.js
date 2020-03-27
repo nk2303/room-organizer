@@ -3,27 +3,87 @@ const itemEndPoint = "http://localhost:3000/api/v1/items"
 const storageEndPoint = "http://localhost:3000/api/v1/storages"
 const roomEndPoint = "http://localhost:3000/api/v1/rooms"
 
+let currentUser;
+
 document.addEventListener('DOMContentLoaded', () => {
   const roomList = document.querySelector('#room-list');
-  fetchUser(1)
-  .then(res => {
-    for(let room of res[0].rooms) {
-      renderRoom(roomList, room);
+
+  let usersArray = [];
+  fetchUsers(usersArray);
+
+  const login = document.getElementById("login");
+  const logout = document.getElementById('logout');
+
+  loginForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    if (usersArray.find(element => element.name == event.target.username.value)) {
+      currentUser = usersArray.find(element => element.name == event.target.username.value);
+    } else {
+      post(userEndPoint, {name: event.target.username.value});
+      fetchUsers(usersArray);
+      currentUser = usersArray.find(element => element.name == event.target.username.value);
     }
-    const roomButton = renderElement(roomList, 'button', ['row', 'btn', 'btn-light'], 'Add Room');
-    roomList.setAttribute('data-user-id', res[0].id)
-    roomButton.addEventListener('click', function() {
-      renderEntityText(roomEndPoint, "room", roomList, roomButton);
-      roomButton.style.display = "none";
-    });
+
+    login.hidden = true;
+    loginForm.hidden = true;
+    logout.hidden = false;
+
+    let greetingLocation = document.querySelector("#topbar #greeting");
+    let greeting = document.createElement("p");
+    greeting.innerText = `Welcome home, ${currentUser.name}.`
+    greetingLocation.appendChild(greeting);
+
+    if (currentUser.rooms) {
+      for (let room of currentUser.rooms) {
+        renderRoom(roomList, room);
+      }
+    }
+      const roomButton = renderElement(roomList, 'button', ['row', 'btn', 'btn-light'], 'Add Room');
+      roomList.setAttribute('data-user-id', currentUser.id)
+      roomButton.addEventListener('click', function() {
+        renderEntityText(roomEndPoint, "room", roomList, roomButton);
+        roomButton.style.display = "none";
+      });
   })
+
+  logout.addEventListener("click", (event) => {
+    event.preventDefault();
+
+    login.hidden = false;
+    loginForm.hidden = false;
+    logout.hidden = true;
+
+    currentUser = null;
+    let mainPage = document.getElementsByClassName("container-fluid row");
+    mainPage.innerHTML = "";
+
+  })
+
 });
 
+function fetchUsers(array) {
+    return fetch(userEndPoint)
+        .then(function(resp) {
+          return resp.json();
+        })
+        .then(function(data) {
+        data.map(function(user) {
+          array.push(user);
+        });
+        return array;
+        })
+        .catch(console.error);     
+}
+
 function fetchUser(userId) {
-  // TODO: @nk2303 - Use user id to fetch data. Temporarily hard code using user 1.
-  return fetch(`${userEndPoint}/`)
-      .then(res => res.json())
-      .catch(console.error);
+    return fetch(`${userEndPoint}/${userId}`)
+        .then(function(resp) {
+          return resp.json();
+        })
+        .then(function(data) {
+        })
+        .catch(console.error)
 }
 
 function post(endPoint, entity) {
@@ -44,7 +104,7 @@ function post(endPoint, entity) {
       }
     })
     .catch(console.error);
-} 
+}
 
 function renderRoom(rootContainer, roomObj) {
   const roomContainer = renderDivElement(rootContainer, ['container']);
