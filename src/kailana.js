@@ -62,9 +62,10 @@ editItemDesc.type = "textarea";
 editItemDesc.type = "targetName";
 
 
-
-
 const inputEditItemBtn = document.createElement("input");
+
+editItemFormTag.appendChild(editItemInput);
+editItemFormTag.appendChild(inputEditItemBtn);
 
 {/* <form method="post">
 <input type="hidden" name="_method" value="put" />

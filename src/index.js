@@ -21,6 +21,13 @@ document.addEventListener('DOMContentLoaded', () => {
   })
 });
 
+function deleteItem(itemId) {
+  fetch(`${itemEndPoint}/${itemId}`, {method: "DELETE"})
+  .then(console.log)
+  .catch(console.error);
+}
+
+
 function fetchUser(userId) {
   // TODO: @nk2303 - Use user id to fetch data. Temporarily hard code using user 1.
   return fetch(`${userEndPoint}/`)
@@ -50,14 +57,13 @@ function post(endPoint, entity) {
 
 function renderRoom(rootContainer, roomObj) {
   const roomContainer = renderDivElement(rootContainer, ['container']);
-  renderDivElement(roomContainer, ['row'], roomObj.name);
+  renderDivElement(roomContainer, ['row', 'font-size-20'], roomObj.name);
   const storageListContainer = renderDivElement(roomContainer, ['row']);
   storageListContainer.setAttribute('data-room-id', roomObj.id);
 
   const storageButton = renderElement(storageListContainer, 'button', ['btn', 'btn-light'], 'Add Storage');
   storageButton.addEventListener('click', function() {
     renderEntityText(storageEndPoint, "storage", storageListContainer, storageButton);
-    // storageButton.style.display = "none";
     storageListContainer.removeChild(storageButton);
   });
   for (let storage of roomObj.storages) {
@@ -83,15 +89,64 @@ function renderStorage(listContainer, storageObj) {
 }
 
 function renderItem(storageContainer, itemObj) {
-  renderElement(storageContainer, 'p', ['card-text'], itemObj.name);
-  // const deleteItemButton = document.createElement("button") 
-  // deleteItemButton.textContent = "x";
-  // deleteItemButton.className = "deleteItem";
-  // deleteItemButton.addEventListener("click", function() {
-  //   console.log("");
-  // })
-  // storageContainer.appendChild(deleteItemButton);
+  const itemElement = renderElement(storageContainer, 'span', ['card-text', 'font-size-14'], itemObj.name);
+  itemElement.addEventListener("click", function(e){ 
+    let popUpForm = document.querySelector("#pop-up-body form")
+    console.log(popUpForm)
+    openPopUp();
+    if (!popUpForm){
+   //Kim: add this line in
+    console.log("oh hey!") // Kim: Inspect the frontend, open console, see it's returning oh hey!
+    const editItemFormTag = document.createElement('form');
+
+    const editItemInput = document.createElement("input");
+    editItemInput.placeholder = `Edit item name`;
+    editItemInput.type = "text";
+    editItemInput.name = "targetName";
+
+    const editItemCategory = document.createElement("input"); 
+    editItemCategory.type = "text"; 
+    editItemCategory.name = "targetName"; 
+
+    const editItemQuant = document.createElement("input");
+    editItemQuant.type = "number"; 
+    editItemQuant.name = "targetName";
+
+    const editItemDesc = document.createElement("input");
+    editItemDesc.type = "textarea";
+    editItemDesc.type = "targetName";
+
+
+    const inputEditItemBtn = document.createElement("button");
+
+    editItemFormTag.appendChild(editItemInput);
+    editItemFormTag.appendChild(inputEditItemBtn);
+    console.log(inputEditItemBtn)
+    let popUpBody = document.getElementById("pop-up-body");
+
+    popUpBody.appendChild(editItemFormTag);
+
+    let popUp = document.getElementById("pop-up-windows")
+
+    //end of pop up 
+    }
+  })
+  const deleteItemButton = document.createElement("button");
+  const divE = document.createElement('div');
+  deleteItemButton.textContent = "x";
+  deleteItemButton.className = "deleteItem";
+  deleteItemButton.classList.add("close");
+  deleteItemButton.classList.add("font-size-14")
+  deleteItemButton.setAttribute('data-value', itemObj.id);
+  deleteItemButton.addEventListener("click", function(e){
+    deleteItem(e.target.dataset.value);
+    storageContainer.removeChild(divE);
+  })
+  divE.appendChild(deleteItemButton);
+  divE.appendChild(itemElement);
+  storageContainer.appendChild(divE);
 }
+
 
 function renderDivElement(container, classList, labelText) {
   return renderElement(container, 'div', classList, labelText);
@@ -139,4 +194,19 @@ function renderEntityText(endPoint, entity, list, button) {
   formtag.appendChild(inputE);
   formtag.appendChild(inputBtn);
   list.appendChild(formtag);
+}
+
+function openPopUp(){
+  let popUpDiv = document.getElementById("pop-up-main-div");
+  
+  let exitMenu = document.getElementById("exitMenu")
+  exitMenu.addEventListener("click", function(){
+    closePopUp()
+  })
+  popUpDiv.style.display = "block";
+}
+
+function closePopUp(){
+  let popUpDiv = document.getElementById("pop-up-main-div");
+  popUpDiv.style.display = "none";
 }
