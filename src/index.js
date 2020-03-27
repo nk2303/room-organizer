@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     for(let room of res[0].rooms) {
       renderRoom(roomList, room);
     }
-    const roomButton = renderElement(roomList, 'button', ['row', 'btn', 'btn-light'], 'Add Room');
+    const roomButton = renderElement(roomList, 'button', ['row', 'btn', 'btn-light'], '+ Add Room');
     roomList.setAttribute('data-user-id', res[0].id)
     roomButton.addEventListener('click', function() {
       renderEntityText(roomEndPoint, "room", roomList, roomButton);
@@ -61,9 +61,8 @@ function renderRoom(rootContainer, roomObj) {
   const storageListContainer = renderDivElement(roomContainer, ['row']);
   storageListContainer.setAttribute('data-room-id', roomObj.id);
 
-  const storageButton = renderElement(storageListContainer, 'button', ['btn', 'btn-light'], '+ Add Storage');
-  const divE1 = document.createElement('div');
-  divE1.className = 'col-3';
+  const storageButtonWrapper = renderDivElement(storageListContainer, ['col-3']);
+  const storageButton = renderElement(storageButtonWrapper, 'button', ['btn', 'btn-light'], '+ Add Storage');
   storageButton.addEventListener('click', function() {
     renderEntityText(storageEndPoint, "storage", storageListContainer, storageButton);
     storageListContainer.removeChild(divE1);
