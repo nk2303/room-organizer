@@ -3,7 +3,9 @@ const itemEndPoint = "http://localhost:3000/api/v1/items"
 const storageEndPoint = "http://localhost:3000/api/v1/storages"
 const roomEndPoint = "http://localhost:3000/api/v1/rooms"
 
+
 document.addEventListener('DOMContentLoaded', () => {
+
   const roomList = document.querySelector('#room-list');
   fetchUser(1)
   .then(res => {
@@ -91,11 +93,47 @@ function renderStorage(listContainer, storageObj) {
 
 function renderItem(storageContainer, itemObj) {
   const itemElement = renderElement(storageContainer, 'span', ['card-text', 'font-size-14'], itemObj.name);
-  itemElement.setAttribute('data-toggle', "modal");
-  itemElement.setAttribute('data-target', "#exampleModalLive");
-  itemElement.addEventListener("click", function(e){ //Kim: add this line in
+  itemElement.addEventListener("click", function(e){ 
+    let popUpForm = document.querySelector("#pop-up-body form")
+    console.log(popUpForm)
+    openPopUp();
+    if (!popUpForm){
+   //Kim: add this line in
     console.log("oh hey!") // Kim: Inspect the frontend, open console, see it's returning oh hey!
+    const editItemFormTag = document.createElement('form');
+
+    const editItemInput = document.createElement("input");
+    editItemInput.placeholder = `Edit item name`;
+    editItemInput.type = "text";
+    editItemInput.name = "targetName";
+
+    const editItemCategory = document.createElement("input"); 
+    editItemCategory.type = "text"; 
+    editItemCategory.name = "targetName"; 
+
+    const editItemQuant = document.createElement("input");
+    editItemQuant.type = "number"; 
+    editItemQuant.name = "targetName";
+
+    const editItemDesc = document.createElement("input");
+    editItemDesc.type = "textarea";
+    editItemDesc.type = "targetName";
+
+    const inputEditItemBtn = document.createElement("button");
+
+    editItemFormTag.appendChild(editItemInput);
+    editItemFormTag.appendChild(inputEditItemBtn);
+    console.log(inputEditItemBtn)
+    let popUpBody = document.getElementById("pop-up-body");
+
+    popUpBody.appendChild(editItemFormTag);
+
+    let popUp = document.getElementById("pop-up-windows")
+
+    //end of pop up 
+    }
   })
+
   const deleteItemButton = document.createElement("button");
   const divE = document.createElement('div');
   deleteItemButton.textContent = "x";
@@ -161,4 +199,20 @@ function renderEntityText(endPoint, entity, list, button) {
   formtag.appendChild(inputE);
   formtag.appendChild(inputBtn);
   list.appendChild(formtag);
+}
+
+
+function openPopUp(){
+  let popUpDiv = document.getElementById("pop-up-main-div");
+  
+  let exitMenu = document.getElementById("exitMenu")
+  exitMenu.addEventListener("click", function(){
+    closePopUp()
+  })
+  popUpDiv.style.display = "block";
+}
+
+function closePopUp(){
+  let popUpDiv = document.getElementById("pop-up-main-div");
+  popUpDiv.style.display = "none";
 }
