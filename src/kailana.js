@@ -37,3 +37,49 @@ function deleteItemP(p){
     parentCard = div.querySelector("card-body")
     parentCard.removeChild(p);
 }
+
+
+//edit item form 
+
+
+
+const editItemFormTag = document.createElement('form');
+const editItemInput = document.createElement("input");
+editItemInput.placeholder = `Edit name`;
+editItemInput.type = "text";
+editItemInput.name = "targetName";
+
+const editItemCategory = document.createElement("input"); 
+editItemCategory.type = "text"; 
+editItemCategory.name = "targetName"; 
+
+const editItemQuant = document.createElement("input");
+editItemQuant.type = "number"; 
+editItemQuant.name = "targetName";
+
+const editItemDesc = document.createElement("input");
+editItemDesc.type = "textarea";
+editItemDesc.type = "targetName";
+
+
+
+
+const inputEditItemBtn = document.createElement("input");
+
+{/* <form method="post">
+<input type="hidden" name="_method" value="put" />
+<ul class="drop-down closed"> */}
+
+{/* 
+<div class="form-group">
+<label for="exampleFormControlSelect2">Item Categories</label>
+<select multiple class="form-control" id="itemCat">
+  <option>Clothes</option>
+  <option>Paper</option>
+  <option></option>
+  <option>4</option>
+  <option>5</option>
+</select>
+</div> */}
+
+

@@ -1,16 +1,7 @@
 #chrome-container {
+    background-color: black;
     background-image: url('../assets/kids-rooms-neutral1.png');
     min-height: 800px;
+    background-size:cover;
 }
 
-
-div.card-body {
-    overflow: scroll;
-    max-width: 180px;
-    max-height: 200px;
-}
-
-div.card-title {
-    position: absolute;
-
-}
