@@ -1,7 +1,35 @@
 #chrome-container {
-    background-color: black;
-    background-image: url('../assets/kids-rooms-neutral1.png');
+    background-image: url('../assets/room-with-laptops.jpg');
+    /* background-image: url('../assets/kids-room.jpg'); */
+    /* background-image: url('../assets/busy-room.jpg'); */
     min-height: 800px;
     background-size:cover;
 }
 
+#room-list > .container {
+    background-color: #EBECF0;
+    margin: 12px;
+    border-radius: 5px;
+    padding: 30px;
+}
+
+.font-size-14 {
+    font-size: 14px;
+}
+
+#topbar {
+    color: white;
+    font-size: 14px;
+}
+
+.card-title {
+    font-size: 15px;
+}
+
+.font-size-20 {
+    font-size: 20px;
+}
+
+.btn-light{
+    font-size: 14px;
+}
