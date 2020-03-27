@@ -34,7 +34,6 @@
     font-size: 14px;
 }
 
-
 #pop-up-main-div{
     position: absolute;
     width: 800px;
@@ -50,8 +49,6 @@
     display: none;
 }
 
-
-
 #close-pop-up-div{
     position: absolute;
     width: 25px;
@@ -62,7 +59,6 @@
     right: 5px;
     top: 5px;
     cursor: pointer;
-
 }
 
 #close-pop-up-div p{
@@ -81,5 +77,4 @@
     font-family: sans-serif;
     text-align: center;
     margin-top: 80px;
-    
 }

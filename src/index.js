@@ -116,7 +116,6 @@ function renderItem(storageContainer, itemObj) {
     editItemDesc.type = "textarea";
     editItemDesc.type = "targetName";
 
-
     const inputEditItemBtn = document.createElement("button");
 
     editItemFormTag.appendChild(editItemInput);
@@ -131,6 +130,7 @@ function renderItem(storageContainer, itemObj) {
     //end of pop up 
     }
   })
+
   const deleteItemButton = document.createElement("button");
   const divE = document.createElement('div');
   deleteItemButton.textContent = "x";
