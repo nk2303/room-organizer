@@ -1,4 +1,10 @@
+// delete storage function
 
+function deleteStorage(storageId) {
+    fetch(`${storageEndPoint}/${storageId}`, {method: "DELETE"})
+    .then(console.log)
+    .catch(console.error);
+  }
 
 
 

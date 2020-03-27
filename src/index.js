@@ -12,7 +12,17 @@ document.addEventListener('DOMContentLoaded', () => {
     for(let room of res[0].rooms) {
       renderRoom(roomList, room);
     }
-    const roomButton = renderElement(roomList, 'button', ['row', 'btn', 'btn-light'], '+ Add Room');
+    const roomButtonWrapper = renderDivElement(roomList, ['container']);
+    const roomButton = renderElement(roomButtonWrapper, 'button', ['row', 'btn', 'btn-light'], '+ Add Room');
+
+    // const storageButtonWrapper = renderDivElement(storageListContainer, ['col-3']);
+    // const storageButton = renderElement(storageButtonWrapper, 'button', ['btn', 'btn-light', 'block'], '+ Add Storage');
+    
+    // storageButton.addEventListener('click', function() {
+    //   renderEntityText(storageEndPoint, "storage", storageListContainer, storageButton);
+    //   storageListContainer.removeChild(storageButtonWrapper);
+    // });
+
     roomList.setAttribute('data-user-id', res[0].id)
     roomButton.addEventListener('click', function() {
       renderEntityText(roomEndPoint, "room", roomList, roomButton);
@@ -61,15 +71,15 @@ function renderRoom(rootContainer, roomObj) {
   const storageListContainer = renderDivElement(roomContainer, ['row']);
   storageListContainer.setAttribute('data-room-id', roomObj.id);
 
-  const storageButtonWrapper = renderDivElement(storageListContainer, ['col-3']);
-  const storageButton = renderElement(storageButtonWrapper, 'button', ['btn', 'btn-light'], '+ Add Storage');
-  storageButton.addEventListener('click', function() {
-    renderEntityText(storageEndPoint, "storage", storageListContainer, storageButton);
-    storageListContainer.removeChild(divE1);
-  });
   for (let storage of roomObj.storages) {
     renderStorage(storageListContainer, storage);
   }
+  const storageButtonWrapper = renderDivElement(storageListContainer, ['col-3']);
+  const storageButton = renderElement(storageButtonWrapper, 'button', ['btn', 'btn-light', 'block'], '+ Add Storage');
+  storageButton.addEventListener('click', function() {
+    renderEntityText(storageEndPoint, "storage", storageListContainer, storageButton);
+    storageListContainer.removeChild(storageButtonWrapper);
+  });
 }
 
 function renderStorage(listContainer, storageObj) {
@@ -78,6 +88,30 @@ function renderStorage(listContainer, storageObj) {
   const storageBody = renderDivElement(storageCard, ['card-body']);
   storageBody.setAttribute('data-storage-id', storageObj.id);
   renderElement(storageBody, 'h5', ['card-title'], storageObj.name);
+  for (let item of storageObj.items) {
+    renderItem(storageBody, item);
+  }
+
+  const deleteStorageButton = document.createElement("button");
+  const divDelStor = document.createElement("div");
+  divDelStor.classList.add("margin-3");
+  deleteStorageButton.textContent = "Delete Storage"; 
+  deleteStorageButton.className = "deleteStorage";
+  deleteStorageButton.classList.add('btn-light');
+  deleteStorageButton.classList.add("font-size-14");
+  deleteStorageButton.classList.add("block-narrow");
+  deleteStorageButton.setAttribute('data-value', storageObj.id);
+  deleteStorageButton.addEventListener("click", function(e){
+    console.log(e.target.dataset.value);
+    deleteStorage(e.target.dataset.value);
+    storageObj.items.forEach(item => { 
+      //console.log(item)
+    })
+    listContainer.removeChild(storageContainer);
+    let openStorage = document.getElementById("open-storage")
+  })
+  divDelStor.appendChild(deleteStorageButton);
+  storageContainer.appendChild(divDelStor);
   for (let item of storageObj.items) {
     renderItem(storageBody, item);
   }
@@ -218,3 +252,4 @@ function closePopUp(){
   let popUpDiv = document.getElementById("pop-up-main-div");
   popUpDiv.style.display = "none";
 }
+
