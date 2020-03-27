@@ -1,16 +1,36 @@
-const userEndPoint = "http://localhost:3000/api/v1/users"
-const itemEndPoint = "http://localhost:3000/api/v1/items"
-const storageEndPoint = "http://localhost:3000/api/v1/storages"
-const roomEndPoint = "http://localhost:3000/api/v1/rooms"
+const userEndPoint = "http://localhost:3000/api/v1/users";
+const itemEndPoint = "http://localhost:3000/api/v1/items";
+const storageEndPoint = "http://localhost:3000/api/v1/storages";
+const roomEndPoint = "http://localhost:3000/api/v1/rooms";
 
+let currentUser;
 
 document.addEventListener('DOMContentLoaded', () => {
 
   const roomList = document.querySelector('#room-list');
-  fetchUser(1)
-  .then(res => {
-    for(let room of res[0].rooms) {
-      renderRoom(roomList, room);
+
+  let usersArray = [];
+  fetchUsers(usersArray);
+
+  const login = document.getElementById("login");
+  const loginForm = document.getElementById("loginForm");
+  const logout = document.getElementById('logout');
+  const sideBar = document.getElementById('searchForm');
+
+  loginForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    if (usersArray.find(element => element.name == event.target.username.value)) {
+      currentUser = usersArray.find(element => element.name == event.target.username.value);
+      if (currentUser.rooms) {
+        for (let room of currentUser.rooms) {
+          renderRoom(roomList, room);
+        }
+      }
+    } else {
+      post(userEndPoint, {name: event.target.username.value});
+      fetchUsers(usersArray);
+      currentUser = usersArray.find(element => element.name == event.target.username.value);
     }
     const roomButtonWrapper = renderDivElement(roomList, ['container']);
     const roomButton = renderElement(roomButtonWrapper, 'button', ['row', 'btn', 'btn-light'], '+ Add Room');
@@ -25,10 +45,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
     roomList.setAttribute('data-user-id', res[0].id)
     roomButton.addEventListener('click', function() {
+
+      fetchUsers(usersArray);
+      currentUser = usersArray.find(element => element.name == event.target.username.value);
+
       renderEntityText(roomEndPoint, "room", roomList, roomButton);
       roomButton.style.display = "none";
+      
     });
   })
+
+  logout.addEventListener("click", (event) => {
+    event.preventDefault();
+
+    login.hidden = false;
+    loginForm.hidden = false;
+    logout.hidden = true;
+    sideBar.hidden = true;
+
+    currentUser = null;
+    let mainPage = document.getElementsByClassName("container-fluid row");
+    mainPage.innerHTML = "";
+
+  })
+
+  // const searchForm = document.getElementById('searchForm');
+  // const search = document.getElementById('search');
+  
+  // searchForm.addEventListener("submit", (event) => {
+  //   event.preventDefault();
+
+  //   let items = [];
+  //   fetchItems(items);
+
+  //   const searchString = event.target.searchItem.value;
+
+  //   const resultArray = [];
+
+  //   let result = items.find(element => element["name"] == searchString);   
+
+  // });
+
 });
 
 function deleteItem(itemId) {
@@ -37,12 +94,42 @@ function deleteItem(itemId) {
   .catch(console.error);
 }
 
+function fetchUsers(array) {
+    return fetch(userEndPoint)
+        .then(function(resp) {
+          return resp.json();
+        })
+        .then(function(data) {
+        data.map(function(user) {
+          array.push(user);
+        });
+        return array;
+        })
+        .catch(console.error);     
+}
 
 function fetchUser(userId) {
-  // TODO: @nk2303 - Use user id to fetch data. Temporarily hard code using user 1.
-  return fetch(`${userEndPoint}/`)
-      .then(res => res.json())
-      .catch(console.error);
+    return fetch(`${userEndPoint}/${userId}`)
+        .then(function(resp) {
+          return resp.json();
+        })
+        .then(function(data) {
+        })
+        .catch(console.error)
+}
+
+function fetchItems(array) {
+  return fetch(itemEndPoint)
+      .then(function(resp) {
+        return resp.json();
+      })
+      .then(function(data) {
+      data.map(function(item) {
+        array.push(item);
+      });
+      return array;
+      })
+      .catch(console.error);     
 }
 
 function post(endPoint, entity) {
@@ -58,12 +145,13 @@ function post(endPoint, entity) {
       return res.json();
     })
     .then(function(data) {
+      console.log(data)
       if (!data.id) {
         console.log("SOMETHING WENT WRONG", data);
       }
     })
     .catch(console.error);
-} 
+}
 
 function renderRoom(rootContainer, roomObj) {
   const roomContainer = renderDivElement(rootContainer, ['container']);
@@ -187,7 +275,6 @@ function renderItem(storageContainer, itemObj) {
   storageContainer.appendChild(divE);
 }
 
-
 function renderDivElement(container, classList, labelText) {
   return renderElement(container, 'div', classList, labelText);
 }
@@ -252,4 +339,3 @@ function closePopUp(){
   let popUpDiv = document.getElementById("pop-up-main-div");
   popUpDiv.style.display = "none";
 }
-

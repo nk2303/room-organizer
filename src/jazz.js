@@ -13,19 +13,19 @@ function loginForm() {
     })
 }
 
-function fetchUser(userId) {  
-    return fetch(`${endPoint}/${userId}`) 
+function fetchUser(userId) {
+    return fetch(`${endPoint}/${userId}`)
         .then(function(resp) {
             return resp.json();
         })
         .then(function(data){
             currentUser = data
-        })    
+        })
         .catch(console.error)  
-  }
+}
 
 function fetchUsers() {
-    return fetch(endPoint) 
+    return fetch(endPoint)
         .then(function(resp) {
             return resp.json();
         })
@@ -38,9 +38,9 @@ function fetchUsers() {
                 });
             });
             return usersArr;
-        })    
+        })
         .catch(console.error);
-  };
+}
 
 //  Sign Up
 function eventSignUp() {
