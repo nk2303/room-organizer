@@ -62,10 +62,9 @@ function renderRoom(rootContainer, roomObj) {
   const storageButton = renderElement(storageListContainer, 'button', ['btn', 'btn-light'], '+ Add Storage');
   const divE1 = document.createElement('div');
   divE1.className = 'col-3';
-  divE1.appendChild(storageButton);
   storageButton.addEventListener('click', function() {
     renderEntityText(storageEndPoint, "storage", storageListContainer, storageButton);
-    storageListContainer.removeChild(storageButton);
+    storageListContainer.removeChild(divE1);
   });
   for (let storage of roomObj.storages) {
     renderStorage(storageListContainer, storage);
