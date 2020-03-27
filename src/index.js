@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const login = document.getElementById("login");
   const loginForm = document.getElementById("loginForm");
   const logout = document.getElementById('logout');
+  const sideBar = document.getElementById('searchForm');
 
   loginForm.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -35,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     login.hidden = true;
     loginForm.hidden = true;
     logout.hidden = false;
+    sideBar.hidden = false;
 
     let greetingLocation = document.querySelector("#topbar #greeting");
     let greeting = document.createElement("p");
@@ -60,12 +62,30 @@ document.addEventListener('DOMContentLoaded', () => {
     login.hidden = false;
     loginForm.hidden = false;
     logout.hidden = true;
+    sideBar.hidden = true;
 
     currentUser = null;
     let mainPage = document.getElementsByClassName("container-fluid row");
     mainPage.innerHTML = "";
 
   })
+
+  // const searchForm = document.getElementById('searchForm');
+  // const search = document.getElementById('search');
+  
+  // searchForm.addEventListener("submit", (event) => {
+  //   event.preventDefault();
+
+  //   let items = [];
+  //   fetchItems(items);
+
+  //   const searchString = event.target.searchItem.value;
+
+  //   const resultArray = [];
+
+  //   let result = items.find(element => element["name"] == searchString);   
+
+  // });
 
 });
 
@@ -99,6 +119,20 @@ function fetchUser(userId) {
         .catch(console.error)
 }
 
+function fetchItems(array) {
+  return fetch(itemEndPoint)
+      .then(function(resp) {
+        return resp.json();
+      })
+      .then(function(data) {
+      data.map(function(item) {
+        array.push(item);
+      });
+      return array;
+      })
+      .catch(console.error);     
+}
+
 function post(endPoint, entity) {
   fetch(endPoint, {
     method: "POST",
@@ -130,7 +164,6 @@ function renderRoom(rootContainer, roomObj) {
   const storageButton = renderElement(storageButtonWrapper, 'button', ['btn', 'btn-light'], '+ Add Storage');
   storageButton.addEventListener('click', function() {
     renderEntityText(storageEndPoint, "storage", storageListContainer, storageButton);
-    // storageListContainer.removeChild(divE1);
   });
   for (let storage of roomObj.storages) {
     renderStorage(storageListContainer, storage);

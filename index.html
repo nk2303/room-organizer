@@ -36,18 +36,18 @@
         <button hidden id='logout' class="btn btn-outline-secondary" type='button'>Log out</button>
       </header>
       
-      <div class="container-fluid row">
+      <div id='sideBar' class="container-fluid row">
           <sidebar class='left-side-menu col-3'>
             <div class="row">
-              <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="Type in your item here...." aria-label="Some labels" aria-describedby="button-addon2">
+              <form hidden id="searchForm" class="form">
+                <input type="text" class="form-control" placeholder="Search item...." name="searchItem" aria-label="Some labels" aria-describedby="button-addon2">
                 <div class="input-group-append">
-                  <button style="background-color: #EBECF0;" class="btn btn-outline-secondary" type="button" id="button-addon2">Look up</button>
+                  <button id="search" class="btn btn-outline-secondary" type="input">Search</button>
                 </div>
-              </div>
+              </form>
             </div>
             <div class="row">
-              <div class="card container-fluid open-storage-box">
+              <div hidden class="card container-fluid open-storage-box">
                 <div class="card-body">
                   <h5 class="card-title">Open Storage</h5>
                   <p class="card-text">items</p>
