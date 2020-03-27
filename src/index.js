@@ -55,11 +55,14 @@ function post(endPoint, entity) {
 
 function renderRoom(rootContainer, roomObj) {
   const roomContainer = renderDivElement(rootContainer, ['container']);
-  renderDivElement(roomContainer, ['row', 'font-size-20'], roomObj.name);
+  renderDivElement(roomContainer, ['row', 'font-size-16'], roomObj.name);
   const storageListContainer = renderDivElement(roomContainer, ['row']);
   storageListContainer.setAttribute('data-room-id', roomObj.id);
 
-  const storageButton = renderElement(storageListContainer, 'button', ['btn', 'btn-light'], 'Add Storage');
+  const storageButton = renderElement(storageListContainer, 'button', ['btn', 'btn-light'], '+ Add Storage');
+  const divE1 = document.createElement('div');
+  divE1.className = 'col-3';
+  divE1.appendChild(storageButton);
   storageButton.addEventListener('click', function() {
     renderEntityText(storageEndPoint, "storage", storageListContainer, storageButton);
     storageListContainer.removeChild(storageButton);
@@ -79,7 +82,7 @@ function renderStorage(listContainer, storageObj) {
     renderItem(storageBody, item);
   }
 
-  const itemButton = renderElement(storageBody, 'button', ['btn', 'btn-light'], 'Add Item');
+  const itemButton = renderElement(storageBody, 'button', ['btn', 'btn-light'], '+ Add Item');
   itemButton.addEventListener('click', function() {
     renderEntityText(itemEndPoint, "item", storageBody, itemButton);
     storageBody.removeChild(itemButton);
@@ -87,7 +90,12 @@ function renderStorage(listContainer, storageObj) {
 }
 
 function renderItem(storageContainer, itemObj) {
-  const itemElement = renderElement(storageContainer, 'span', ['card-text', 'font-size-14'], itemObj.name); ////what
+  const itemElement = renderElement(storageContainer, 'span', ['card-text', 'font-size-14'], itemObj.name);
+  itemElement.setAttribute('data-toggle', "modal");
+  itemElement.setAttribute('data-target', "#exampleModalLive");
+  itemElement.addEventListener("click", function(e){ //Kim: add this line in
+    console.log("oh hey!") // Kim: Inspect the frontend, open console, see it's returning oh hey!
+  })
   const deleteItemButton = document.createElement("button");
   const divE = document.createElement('div');
   deleteItemButton.textContent = "x";
@@ -124,11 +132,13 @@ function renderElement(parentElement, htmlTag, classList, innerText) {
 function renderEntityText(endPoint, entity, list, button) {
   const formtag = document.createElement('form');
   const inputE = document.createElement("input");
-  inputE.placeholder = `Enter you new ${entity}'s name...`;
+  inputE.placeholder = `Enter new ${entity}'s name...`;
   inputE.type = "text";
   inputE.name = "targetName";
+  inputE.className = "font-size-14";
   const inputBtn = document.createElement("input");
   inputBtn.type = "submit"; // default
+  inputBtn.class = "btn-outline-secondary";
   formtag.addEventListener("submit", function(event) {
       event.preventDefault();
       formtag.style.display = "none";
