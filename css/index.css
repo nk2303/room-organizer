@@ -5,9 +5,11 @@
     min-height: 800px;
     background-size:cover;
 }
+
 .margin-3 {
     margin: 3px;
 }
+
 .block {
     display: block;
     width: 100%;
