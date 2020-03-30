@@ -42,6 +42,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let greeting = document.createElement("p");
     greeting.innerText = `Welcome home, ${event.target.username.value}.`
     greetingLocation.appendChild(greeting);
+<<<<<<< HEAD
+=======
+
+    const roomButton = renderElement(roomList, 'button', ['row', 'btn', 'btn-light'], '+ Add Room');
+>>>>>>> jack_changes
     
     roomList.setAttribute('data-user-id', currentUser.id)
     const roomButtonWrapper = renderDivElement(roomList, ['container']);
@@ -254,6 +259,25 @@ function renderStorage(listContainer, storageObj) {
   for (let item of storageObj.items) {
     renderItem(storageBody, item);
   }
+
+  const deleteStorageButton = document.createElement("button");
+  const divDelStor = document.createElement("div");
+  deleteStorageButton.textContent = "Delete Storage"; 
+  deleteStorageButton.className = "deleteStorage";
+  // deleteStorageButton.classList.add("close");
+  deleteStorageButton.classList.add("font-size-14");
+  deleteStorageButton.setAttribute('data-value', storageObj.id);
+  deleteStorageButton.addEventListener("click", function(e){
+    //console.log(e.target.dataset.value);
+    deleteStorage(e.target.dataset.value);
+    storageObj.items.forEach(item => { 
+      //console.log(item)
+    })
+    listContainer.removeChild(storageContainer);
+    let openStorage = document.getElementById("open-storage")
+  })
+  divDelStor.appendChild(deleteStorageButton);
+  storageContainer.appendChild(divDelStor);
 
   const itemButton = renderElement(storageBody, 'button', ['btn', 'btn-light'], '+ Add Item');
   itemButton.addEventListener('click', function() {
