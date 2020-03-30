@@ -42,11 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let greeting = document.createElement("p");
     greeting.innerText = `Welcome home, ${event.target.username.value}.`
     greetingLocation.appendChild(greeting);
-<<<<<<< HEAD
-=======
-
-    const roomButton = renderElement(roomList, 'button', ['row', 'btn', 'btn-light'], '+ Add Room');
->>>>>>> jack_changes
     
     roomList.setAttribute('data-user-id', currentUser.id)
     const roomButtonWrapper = renderDivElement(roomList, ['container']);
