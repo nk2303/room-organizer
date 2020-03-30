@@ -44,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
     greetingLocation.appendChild(greeting);
 
     const roomButton = renderElement(roomList, 'button', ['row', 'btn', 'btn-light'], '+ Add Room');
+    
     roomList.setAttribute('data-user-id', currentUser.id)
     roomButton.addEventListener('click', function() {
 
@@ -91,6 +92,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function deleteItem(itemId) {
   fetch(`${itemEndPoint}/${itemId}`, {method: "DELETE"})
+  .then(console.log)
+  .catch(console.error);
+}
+
+function deleteStorage(storageId) {
+  fetch(`${storageEndPoint}/${storageId}`, {method: "DELETE"})
+  .then(console.log)
+  .catch(console.error);
+}
+
+function deleteRoom(roomId) {
+  fetch(`${roomEndPoint}/${roomId}`, {method: "DELETE"})
   .then(console.log)
   .catch(console.error);
 }
@@ -154,9 +167,39 @@ function post(endPoint, entity) {
     .catch(console.error);
 }
 
+function putItem(itemId, entity){
+  console.log(entity)
+  fetch(`${itemEndPoint}/${itemId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json"
+    },
+    body: JSON.stringify(entity)
+  })
+}
+
 function renderRoom(rootContainer, roomObj) {
   const roomContainer = renderDivElement(rootContainer, ['container']);
   renderDivElement(roomContainer, ['row', 'font-size-16'], roomObj.name);
+
+  const deleteRoomButton = document.createElement("button");
+  const divDelRoo= document.createElement("div");
+  deleteRoomButton.textContent = "Delete Room"; 
+  deleteRoomButton.className = "deleteRoom";
+  deleteRoomButton.classList.add("font-size-14");
+  deleteRoomButton.setAttribute('data-value', roomObj.id);
+  deleteRoomButton.addEventListener("click", function(e){
+    //console.log(e.target.dataset.value);
+    deleteRoom(e.target.dataset.value);
+    // storageObj.items.forEach(item => { 
+    //   //use for saving storage later
+    // })
+    rootContainer.removeChild(roomContainer);
+  })
+  divDelRoo.appendChild(deleteRoomButton);
+  roomContainer.appendChild(divDelRoo);  
+
   const storageListContainer = renderDivElement(roomContainer, ['row']);
   storageListContainer.setAttribute('data-room-id', roomObj.id);
 
@@ -179,6 +222,25 @@ function renderStorage(listContainer, storageObj) {
   for (let item of storageObj.items) {
     renderItem(storageBody, item);
   }
+
+  const deleteStorageButton = document.createElement("button");
+  const divDelStor = document.createElement("div");
+  deleteStorageButton.textContent = "Delete Storage"; 
+  deleteStorageButton.className = "deleteStorage";
+  // deleteStorageButton.classList.add("close");
+  deleteStorageButton.classList.add("font-size-14");
+  deleteStorageButton.setAttribute('data-value', storageObj.id);
+  deleteStorageButton.addEventListener("click", function(e){
+    //console.log(e.target.dataset.value);
+    deleteStorage(e.target.dataset.value);
+    storageObj.items.forEach(item => { 
+      //console.log(item)
+    })
+    listContainer.removeChild(storageContainer);
+    let openStorage = document.getElementById("open-storage")
+  })
+  divDelStor.appendChild(deleteStorageButton);
+  storageContainer.appendChild(divDelStor);
 
   const itemButton = renderElement(storageBody, 'button', ['btn', 'btn-light'], '+ Add Item');
   itemButton.addEventListener('click', function() {
@@ -219,7 +281,17 @@ function renderItem(storageContainer, itemObj) {
 
     editItemFormTag.appendChild(editItemInput);
     editItemFormTag.appendChild(inputEditItemBtn);
-    console.log(inputEditItemBtn)
+
+    inputEditItemBtn.textContent = "Edit"
+    editItemFormTag.addEventListener("submit", (e)=>{
+      e.preventDefault();
+      let input = event.target.targetName.value;
+      putItem(itemObj.id, {name: input})
+      const newElement = renderElement(storageContainer, 'span', ['card-text', 'font-size-14'], input);
+      storageContainer.replaceChild(itemElement,newElement)
+      closePopUp();
+    })
+
     let popUpBody = document.getElementById("pop-up-body");
 
     popUpBody.appendChild(editItemFormTag);
